@@ -3,6 +3,7 @@
 import React, { useState, useMemo } from 'react';
 import Head from 'next/head';
 import ProfileCard from '../../components/ProfileCard';
+import AnimatedText from '../../components/AnimatedText';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
 
 const studentsData = [
@@ -469,20 +470,23 @@ const ProfilPage: React.FC = () => {
       </Head>
 
       {/* Header Section */}
-      <section className="relative py-16 sm:py-20">
+      <section className="relative py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
             <div className="inline-block mb-6">
               <div className="w-20 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full mx-auto mb-4"></div>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-4 sm:mb-6 text-gray-800 dark:text-gray-100">
-              <span className="text-gradient bg-gradient-to-r from-blue-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Profil Mahasiswa
-              </span>
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Kenali lebih dekat anggota kelas Informatika A dengan keunikan dan keahlian masing-masing
-            </p>
+            <AnimatedText
+              text="Profil Mahasiswa"
+              className="text-3xl sm:text-4xl md:text-5xl font-display font-bold mb-4 sm:mb-6 text-gray-800 dark:text-gray-100"
+              animation="fadeInUp"
+            />
+            <AnimatedText
+              text="Kenali lebih dekat anggota kelas Informatika A dengan keunikan dan keahlian masing-masing"
+              className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed"
+              animation="fadeInUp"
+              delay={200}
+            />
           </div>
 
           {/* Search and Filter */}
@@ -498,7 +502,7 @@ const ProfilPage: React.FC = () => {
                   placeholder="Cari nama atau NIM..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base"
                 />
               </div>
 
@@ -506,7 +510,7 @@ const ProfilPage: React.FC = () => {
               <select
                 value={filterRole}
                 onChange={(e) => setFilterRole(e.target.value)}
-                className="px-4 py-3 rounded-xl border border-gray-200/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 shadow-sm hover:shadow-md"
+                className="px-4 py-3 rounded-xl border border-gray-200/50 dark:border-gray-600/50 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 shadow-sm hover:shadow-md text-sm sm:text-base"
               >
                 {roles.map(role => (
                   <option key={role} value={role}>
@@ -519,28 +523,47 @@ const ProfilPage: React.FC = () => {
 
           {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12">
-            <div className="text-center p-4 sm:p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 hover:shadow-xl transition-all duration-300">
-              <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">{studentsData.length}</div>
-              <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Total Mahasiswa</div>
+            <div className="text-center p-4 sm:p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 hover:shadow-xl transition-all duration-300 animate-fade-in">
+              <AnimatedText
+                text={studentsData.length.toString()}
+                className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2"
+                animation="bounce"
+              />
+              <div className="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-300">Total Mahasiswa</div>
             </div>
-            <div className="text-center p-4 sm:p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 hover:shadow-xl transition-all duration-300">
-              <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">{filteredStudents.length}</div>
-              <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Hasil Pencarian</div>
+            <div className="text-center p-4 sm:p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+              <AnimatedText
+                text={filteredStudents.length.toString()}
+                className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2"
+                animation="bounce"
+                delay={100}
+              />
+              <div className="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-300">Hasil Pencarian</div>
             </div>
-            <div className="text-center p-4 sm:p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 hover:shadow-xl transition-all duration-300">
-              <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">1</div>
-              <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Sekretaris</div>
+            <div className="text-center p-4 sm:p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+              <AnimatedText
+                text="1"
+                className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2"
+                animation="bounce"
+                delay={200}
+              />
+              <div className="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-300">Sekretaris</div>
             </div>
-            <div className="text-center p-4 sm:p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 hover:shadow-xl transition-all duration-300">
-              <div className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">1</div>
-              <div className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Kosma</div>
+            <div className="text-center p-4 sm:p-6 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-2xl shadow-lg border border-white/20 dark:border-gray-700/30 hover:shadow-xl transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              <AnimatedText
+                text="1"
+                className="text-2xl sm:text-3xl font-bold text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2"
+                animation="bounce"
+                delay={300}
+              />
+              <div className="text-xs sm:text-sm lg:text-base text-gray-600 dark:text-gray-300">Kosma</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Students Grid */}
-      <section className="relative py-16 sm:py-20">
+      <section className="relative py-8 sm:py-12 lg:py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {filteredStudents.length > 0 ? (
             <div className={`grid ${getGridCols()} gap-4 sm:gap-6`}>
@@ -555,7 +578,7 @@ const ProfilPage: React.FC = () => {
               ))}
             </div>
           ) : (
-            <div className="text-center py-16 sm:py-20">
+            <div className="text-center py-12 sm:py-16 lg:py-20">
               <div className="text-4xl sm:text-6xl mb-4">🔍</div>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 Tidak ada mahasiswa ditemukan
@@ -569,29 +592,31 @@ const ProfilPage: React.FC = () => {
       </section>
 
       {/* Fun Facts */}
-      <section className="relative py-16 sm:py-20">
+      <section className="relative py-12 sm:py-16 lg:py-20">
         <div className="absolute inset-0 bg-gradient-to-r from-white/60 via-blue-50/40 to-white/60 dark:from-gray-800/60 dark:via-gray-900/40 dark:to-gray-800/60 backdrop-blur-sm"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-4 text-gray-800 dark:text-gray-100">
-              Fun Facts Kelas
-            </h2>
+            <AnimatedText
+              text="Fun Facts Kelas"
+              className="text-2xl sm:text-3xl md:text-4xl font-display font-bold mb-4 text-gray-800 dark:text-gray-100"
+              animation="fadeInUp"
+            />
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-            <div className="text-center p-6 sm:p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/30 hover:shadow-2xl hover:scale-105 transition-all duration-300">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            <div className="text-center p-6 sm:p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/30 hover:shadow-2xl hover:scale-105 transition-all duration-300 animate-fade-in">
               <div className="text-3xl sm:text-4xl mb-4">💻</div>
               <h3 className="text-lg sm:text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">Total Mahasiswa</h3>
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">35 Mahasiswa Aktif</p>
             </div>
 
-            <div className="text-center p-6 sm:p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/30 hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="text-center p-6 sm:p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/30 hover:shadow-2xl hover:scale-105 transition-all duration-300 animate-fade-in" style={{ animationDelay: '0.1s' }}>
               <div className="text-3xl sm:text-4xl mb-4">🚀</div>
               <h3 className="text-lg sm:text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">Semangat Belajar</h3>
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Kelas yang aktif dan kreatif</p>
             </div>
 
-            <div className="text-center p-6 sm:p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/30 hover:shadow-2xl hover:scale-105 transition-all duration-300">
+            <div className="text-center p-6 sm:p-8 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md rounded-3xl shadow-xl border border-white/20 dark:border-gray-700/30 hover:shadow-2xl hover:scale-105 transition-all duration-300 animate-fade-in sm:col-span-2 lg:col-span-1" style={{ animationDelay: '0.2s' }}>
               <div className="text-3xl sm:text-4xl mb-4">🎯</div>
               <h3 className="text-lg sm:text-xl font-bold mb-2 text-gray-800 dark:text-gray-100">Fokus</h3>
               <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">Mengembangkan skill programming</p>

@@ -3,11 +3,13 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Image, Calendar, Users, Eye, Heart, X } from 'lucide-react';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
+import ImageCarousel from '../../components/ImageCarousel';
+import AnimatedText from '../../components/AnimatedText';
 
 interface MediaItem {
   id: number;
   type: 'foto' | 'video';
-  src: string;
+  src: string | string[]; // Can be single image/video or array of images
   thumbnail?: string;
   title: string;
   date: string;
@@ -17,29 +19,38 @@ interface MediaItem {
   description: string;
 }
 
-// Sample data - ganti dengan data real Anda
+// Sample data with multiple images per card
 const mediaItems: MediaItem[] = [
   {
     id: 1,
     type: 'foto',
-    src: '/assets/photos/coding-session.jpg',
+    src: [
+      'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&h=400&fit=crop'
+    ],
     title: 'Coding Session Bersama',
     date: '2024-05-15',
     category: 'Akademik',
     likes: 24,
     views: 156,
-    description: 'Sesi coding bersama untuk project akhir semester'
+    description: 'Sesi coding bersama untuk project akhir semester dengan berbagai aktivitas pembelajaran'
   },
   {
     id: 2,
     type: 'foto',
-    src: '/assets/photos/presentation.jpg',
+    src: [
+      'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&h=400&fit=crop'
+    ],
     title: 'Presentasi Project Mobile App',
     date: '2024-05-10',
     category: 'Presentasi',
     likes: 31,
     views: 203,
-    description: 'Demo aplikasi mobile yang dibuat mahasiswa'
+    description: 'Demo aplikasi mobile yang dibuat mahasiswa dengan berbagai fitur inovatif'
   },
   {
     id: 3,
@@ -56,40 +67,51 @@ const mediaItems: MediaItem[] = [
   {
     id: 4,
     type: 'foto',
-    src: '/assets/photos/graduation.jpg',
+    src: [
+      'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=400&fit=crop'
+    ],
     title: 'Wisuda Angkatan 2024',
     date: '2024-04-20',
     category: 'Wisuda',
     likes: 67,
     views: 524,
-    description: 'Momen kelulusan mahasiswa Informatika A'
+    description: 'Momen kelulusan mahasiswa Informatika A dengan berbagai dokumentasi spesial'
   },
   {
     id: 5,
-    type: 'video',
-    src: '/assets/videos/campus-tour.mp4',
-    thumbnail: '/assets/thumbnails/campus-tour.jpg',
-    title: 'Virtual Campus Tour',
-    date: '2024-04-15',
-    category: 'Tour',
-    likes: 28,
-    views: 187,
-    description: 'Tur virtual laboratorium dan fasilitas kampus'
-  },
-  {
-    id: 6,
     type: 'foto',
-    src: '/assets/photos/workshop.jpg',
+    src: [
+      'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&h=400&fit=crop'
+    ],
     title: 'Workshop AI & Machine Learning',
     date: '2024-04-01',
     category: 'Workshop',
     likes: 52,
     views: 298,
-    description: 'Workshop intensif tentang AI dan ML untuk mahasiswa'
+    description: 'Workshop intensif tentang AI dan ML untuk mahasiswa dengan praktik langsung'
+  },
+  {
+    id: 6,
+    type: 'foto',
+    src: [
+      'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=400&fit=crop'
+    ],
+    title: 'Team Building Activity',
+    date: '2024-03-25',
+    category: 'Kumpulan',
+    likes: 38,
+    views: 245,
+    description: 'Kegiatan team building untuk mempererat hubungan antar mahasiswa'
   }
 ];
 
-const categories = ['Semua', 'Akademik', 'Presentasi', 'Kumpulan', 'Wisuda', 'Tour', 'Workshop'];
+const categories = ['Semua', 'Akademik', 'Presentasi', 'Kumpulan', 'Wisuda', 'Workshop'];
 
 export default function ModernGallery() {
   const [activeTab, setActiveTab] = useState<'semua' | 'foto' | 'video'>('semua');
@@ -122,18 +144,15 @@ export default function ModernGallery() {
   const openLightbox = (item: MediaItem) => {
     setSelectedMedia(item);
     setIsLightboxOpen(true);
-    // Prevent body scroll when lightbox is open
     document.body.style.overflow = 'hidden';
   };
 
   const closeLightbox = () => {
     setIsLightboxOpen(false);
     setSelectedMedia(null);
-    // Restore body scroll
     document.body.style.overflow = 'unset';
   };
 
-  // Close lightbox on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isLightboxOpen) {
@@ -145,35 +164,38 @@ export default function ModernGallery() {
     return () => document.removeEventListener('keydown', handleEscape);
   }, [isLightboxOpen]);
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       document.body.style.overflow = 'unset';
     };
   }, []);
 
-  // Determine grid columns based on screen size
   const getGridCols = () => {
     if (isMobile) return 'grid-cols-1';
     if (isTablet) return 'grid-cols-2';
-    return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
+    return 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4';
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900/20 py-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-blue-900/20 py-16 sm:py-20">
       {/* Header Section */}
-      <div className="container mx-auto px-4 mb-12">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-            Galeri Momen
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Koleksi foto dan video terbaik dari perjalanan akademik Informatika A
-          </p>
+      <div className="container mx-auto px-4 mb-8 sm:mb-12">
+        <div className="text-center mb-6 sm:mb-8">
+          <AnimatedText
+            text="Galeri Momen"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent"
+            animation="fadeInUp"
+          />
+          <AnimatedText
+            text="Koleksi foto dan video terbaik dari perjalanan akademik Informatika A"
+            className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+            animation="fadeInUp"
+            delay={200}
+          />
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-6 sm:mb-8">
           <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl p-2 shadow-lg border border-gray-200/50 dark:border-gray-700/50">
             {[
               { key: 'semua', label: 'Semua', icon: Users },
@@ -197,7 +219,7 @@ export default function ModernGallery() {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        <div className="flex flex-wrap justify-center gap-2 mb-6 sm:mb-8">
           {categories.map(category => (
             <button
               key={category}
@@ -217,23 +239,34 @@ export default function ModernGallery() {
       {/* Gallery Grid */}
       <div className="container mx-auto px-4">
         <div className={`grid ${getGridCols()} gap-4 sm:gap-6`}>
-          {filteredItems.map((item) => (
+          {filteredItems.map((item, index) => (
             <div
               key={item.id}
-              className="group relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-gray-200/50 dark:border-gray-700/50"
+              className="group relative bg-white/80 dark:bg-gray-800/80 backdrop-blur-md rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105 border border-gray-200/50 dark:border-gray-700/50 animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Media Preview */}
               <div className="relative aspect-square overflow-hidden">
                 {item.type === 'foto' ? (
-                  <img
-                    src={item.src}
-                    alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    onError={(e) => {
-                      e.currentTarget.src = `https://via.placeholder.com/400x400/6366f1/ffffff?text=${item.title}`;
-                    }}
-                    loading="lazy"
-                  />
+                  Array.isArray(item.src) ? (
+                    <ImageCarousel
+                      images={item.src}
+                      title={item.title}
+                      autoPlay={false}
+                      showDots={true}
+                      className="w-full h-full"
+                    />
+                  ) : (
+                    <img
+                      src={item.src}
+                      alt={item.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => {
+                        e.currentTarget.src = `https://via.placeholder.com/400x400/6366f1/ffffff?text=${encodeURIComponent(item.title)}`;
+                      }}
+                      loading="lazy"
+                    />
+                  )
                 ) : (
                   <div className="relative w-full h-full">
                     <img
@@ -281,6 +314,15 @@ export default function ModernGallery() {
                     {item.category}
                   </span>
                 </div>
+
+                {/* Multiple Images Indicator */}
+                {item.type === 'foto' && Array.isArray(item.src) && item.src.length > 1 && (
+                  <div className="absolute top-3 right-3">
+                    <span className="bg-black/50 text-white px-2 py-1 rounded-full text-xs font-medium">
+                      {item.src.length} foto
+                    </span>
+                  </div>
+                )}
               </div>
 
               {/* Content */}
@@ -316,7 +358,7 @@ export default function ModernGallery() {
 
         {/* Empty State */}
         {filteredItems.length === 0 && (
-          <div className="text-center py-16">
+          <div className="text-center py-12 sm:py-16">
             <div className="w-16 h-16 sm:w-24 sm:h-24 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
               <Image size={isMobile ? 24 : 32} className="text-gray-400" />
             </div>
@@ -340,7 +382,7 @@ export default function ModernGallery() {
             className="relative max-w-4xl w-full max-h-full"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close Button - Fixed positioning for better visibility */}
+            {/* Close Button */}
             <button
               onClick={closeLightbox}
               className="fixed top-4 right-4 z-60 w-10 h-10 sm:w-12 sm:h-12 bg-black/50 hover:bg-black/70 text-white rounded-full flex items-center justify-center transition-all duration-200 backdrop-blur-sm border border-white/20"
@@ -351,17 +393,27 @@ export default function ModernGallery() {
 
             <div className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-2xl max-h-[90vh] overflow-y-auto">
               {selectedMedia?.type === 'foto' ? (
-                <img
-                  src={selectedMedia?.src}
-                  alt={selectedMedia?.title}
-                  className="w-full max-h-[60vh] sm:max-h-[70vh] object-contain"
-                  onError={(e) => {
-                    e.currentTarget.src = `https://via.placeholder.com/800x600/6366f1/ffffff?text=${selectedMedia?.title}`;
-                  }}
-                />
+                Array.isArray(selectedMedia.src) ? (
+                  <ImageCarousel
+                    images={selectedMedia.src}
+                    title={selectedMedia.title}
+                    autoPlay={false}
+                    showDots={true}
+                    className="w-full max-h-[60vh] sm:max-h-[70vh]"
+                  />
+                ) : (
+                  <img
+                    src={selectedMedia.src}
+                    alt={selectedMedia.title}
+                    className="w-full max-h-[60vh] sm:max-h-[70vh] object-contain"
+                    onError={(e) => {
+                      e.currentTarget.src = `https://via.placeholder.com/800x600/6366f1/ffffff?text=${encodeURIComponent(selectedMedia.title)}`;
+                    }}
+                  />
+                )
               ) : (
                 <video
-                  src={selectedMedia?.src}
+                  src={selectedMedia.src as string}
                   controls
                   className="w-full max-h-[60vh] sm:max-h-[70vh]"
                   autoPlay
@@ -393,6 +445,12 @@ export default function ModernGallery() {
                       <Eye size={14} />
                       <span>{selectedMedia?.views}</span>
                     </span>
+                    {selectedMedia?.type === 'foto' && Array.isArray(selectedMedia.src) && (
+                      <span className="flex items-center space-x-1">
+                        <Image size={14} />
+                        <span>{selectedMedia.src.length} foto</span>
+                      </span>
+                    )}
                   </div>
                   <div className="flex items-center space-x-1">
                     <Calendar size={14} />
