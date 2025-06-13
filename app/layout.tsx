@@ -1,6 +1,8 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import CustomCursor from '../components/CustomCursor';
+import CursorEffects from '../components/CursorEffects';
 import './globals.css';
 
 interface LayoutProps {
@@ -10,7 +12,7 @@ interface LayoutProps {
 // This should be the root layout for Next.js App Router
 const RootLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <html lang="en\" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <title>Informatika A - Kelas Terdepan dalam Teknologi</title>
         <meta name="description" content="Website resmi kelas Informatika A - Mengenal lebih dekat mahasiswa, kegiatan, dan prestasi kelas." />
@@ -22,6 +24,10 @@ const RootLayout: React.FC<LayoutProps> = ({ children }) => {
       </head>
       <body>
         <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+          {/* Custom Cursor Components */}
+          <CustomCursor />
+          <CursorEffects />
+          
           <Navbar />
           <main className="pt-16">
             {children}
